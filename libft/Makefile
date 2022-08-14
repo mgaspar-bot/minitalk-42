@@ -6,7 +6,7 @@
 #    By: mgaspar- <mgaspar-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/24 18:05:02 by mgaspar-          #+#    #+#              #
-#    Updated: 2022/04/12 16:12:57 by mgaspar-         ###   ########.fr        #
+#    Updated: 2022/08/14 13:44:47 by mgaspar-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,21 +19,31 @@ SRCSBONUS = ft_lstnew.c ft_lstadd_front.c ft_lstsize.c ft_lstlast.c ft_lstadd_ba
 OBJS = ${SRCS:.c=.o}
 OBJSBONUS = ${SRCSBONUS:.c=.o}
 NAME = libft.a
-HEADER = libft.h
 CC = gcc
 RM = rm -f
-CFLAGS = -Wall -Wextra -Werror
-.c.o: ${CC} ${CFLAGS} -I libft.h -c $< -o ${<:.c=.o}
-all: 		${NAME} bonus clean
-${NAME}:	${OBJS} ${HEADER}
+CFLAGS = -Wall -Wextra -Werror -MMD
+DEPS = ${SRCS:.c=.d}
+DEPSBONUS = ${SRCBONUS:.c=.d}
+
+%.o: %.c
+	${CC} ${CFLAGS} -I ./ -c $< -o $@
+
+all: 		${NAME} 
+-include ${DEPS}
+${NAME}:	${OBJS}
 			ar rcs ${NAME} ${OBJS}
 			ranlib ${NAME}
+-include ${DEPSBONUS}
 bonus:		${OBJS} ${OBJSBONUS}
 			ar rcs ${NAME} ${OBJS} ${OBJSBONUS}
 			ranlib ${NAME}
+			touch $@
+#el toouch es per evitar el relink, 
 clean: 		
-			${RM} ${OBJS} ${OBJSBONUS}
+			${RM} ${OBJS} ${OBJSBONUS} ${DEPS} ${DEPSBONUS}
+			${RM} bonus
 fclean: 	clean
 			${RM} ${NAME}
-re:			fclean all
-.PHONY: all clean fclean re bonus
+re:			fclean 
+			${MAKE}
+.PHONY: all clean fclean re

@@ -6,14 +6,15 @@
 /*   By: mgaspar- <mgaspar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/13 10:42:29 by mgaspar-          #+#    #+#             */
-/*   Updated: 2022/08/14 11:51:17 by mgaspar-         ###   ########.fr       */
+/*   Updated: 2022/08/14 17:05:45 by mgaspar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"./minitalk.h"
+#include"minitalk.h"
 
 void	signal_handler(int sig)
 {
+	(void)sig;
 	write(1, "got it!\n", sizeof("got it!\n"));
 }
 
@@ -26,6 +27,13 @@ int	main(void)
 	write(1, "Server pid: ", sizeof("Server pid: "));
 	ft_putnbr_fd(pid, 1);
 	write(1, "\n", 1);
-	sleep(60);
+	while (1)
+	{
+		write(1, "Server pid: ", sizeof("Server pid: "));
+		ft_putnbr_fd(pid, 1);
+		write(1, "\n", 1);
+		sleep(9);
+		write(1, "im waiting\n", sizeof("im waiting\n"));
+	}
 	return (0);
 }
