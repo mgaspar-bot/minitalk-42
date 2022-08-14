@@ -1,31 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   provaClient.c                                      :+:      :+:    :+:   */
+/*   ft_isprint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgaspar- <mgaspar-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/12 13:52:23 by mgaspar-          #+#    #+#             */
-/*   Updated: 2022/08/12 14:18:03 by mgaspar-         ###   ########.fr       */
+/*   Created: 2022/01/24 20:43:03 by mgaspar-          #+#    #+#             */
+/*   Updated: 2022/03/05 22:52:35 by mgaspar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include<unistd.h>
-#include<stdio.h>
-#include<signal.h>
+#include "libft.h"
 
-void sig_handler(int sig)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	if (sig == SIGSTOP)
+	char	*nova;
+	size_t	talla;
+	size_t	i;
+
+	talla = (ft_strlen(s1) + ft_strlen(s2) + 1);
+	i = 0;
+	nova = (char *)malloc(talla * sizeof(char));
+	if (!nova)
+		return (NULL);
+	while (i < ft_strlen(s1))
 	{
-		write(1, "i don't want to stop\n", sizeof("i don't want to stop\n"));
+		nova[i] = s1[i];
+		i++;
 	}
-}
-
-int main()
-{
-	write(1,"i'm the client\n",sizeof("i'm the client\n"));
-	signal(SIGSTOP, sig_handler);
-
-	return (0);
+	while (i < talla - 1)
+	{
+		nova[i] = *s2;
+		i++;
+		s2++;
+	}
+	nova[i] = 0;
+	return (nova);
 }
