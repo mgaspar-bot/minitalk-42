@@ -6,7 +6,7 @@
 #    By: mgaspar- <mgaspar-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/24 18:05:02 by mgaspar-          #+#    #+#              #
-#    Updated: 2022/08/14 13:44:47 by mgaspar-         ###   ########.fr        #
+#    Updated: 2022/08/15 09:39:42 by mgaspar-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ bonus:		${OBJS} ${OBJSBONUS}
 			ar rcs ${NAME} ${OBJS} ${OBJSBONUS}
 			ranlib ${NAME}
 			touch $@
-#el toouch es per evitar el relink, 
+#el touch es per evitar el relink, 
 clean: 		
 			${RM} ${OBJS} ${OBJSBONUS} ${DEPS} ${DEPSBONUS}
 			${RM} bonus

@@ -14,13 +14,36 @@
 
 #include"minitalk.h"
 
+void sender(int server_pid, char* str)
+{
+	int i;
+	char current_char;
+
+	if (ft_strlen(str) == 0)
+		return;
+	i = 0;
+	while (*str)
+	{
+		current_char = (unsigned char)(*str);
+		while (i < 8)
+		{
+			if (current_char % 2 == 0)
+				kill(server_pid, SIGUSR1);
+			else
+				kill(server_pid, SIGUSR2);
+			current_char /= 2;
+			i++;
+			usleep(1);
+		}
+		i = 0;
+		str++;
+	}
+}
+
 int	main(int argc, char **argv)
 {
-	int	server_pid;
-
 	if (argc != 3)
 		return (-1);
-	server_pid = ft_atoi(argv[1]);
-	kill(server_pid, SIGUSR1);
+	sender(ft_atoi(argv[1]), argv[2]);
 	return (0);
 }
