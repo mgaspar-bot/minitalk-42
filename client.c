@@ -1,5 +1,3 @@
-
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -8,19 +6,19 @@
 /*   By: mgaspar- <mgaspar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/13 10:52:48 by mgaspar-          #+#    #+#             */
-/*   Updated: 2022/08/14 11:49:09 by mgaspar-         ###   ########.fr       */
+/*   Updated: 2022/08/17 11:53:04 by mgaspar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"minitalk.h"
 
-void sender(int server_pid, char* str)
+void	sender(int server_pid, char *str)
 {
-	int i;
-	char current_char;
+	int		i;
+	char	current_char;
 
 	if (ft_strlen(str) == 0)
-		return;
+		return ;
 	i = 0;
 	while (*str)
 	{
@@ -33,7 +31,7 @@ void sender(int server_pid, char* str)
 				kill(server_pid, SIGUSR2);
 			current_char /= 2;
 			i++;
-			usleep(1);
+			usleep(100);
 		}
 		i = 0;
 		str++;
