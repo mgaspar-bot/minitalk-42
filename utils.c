@@ -1,16 +1,70 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgaspar- <mgaspar-@student.42barcel>       +#+  +:+       +#+        */
+/*   By: mgaspar- <mgaspar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/05 22:15:20 by mgaspar-          #+#    #+#             */
-/*   Updated: 2022/03/05 22:24:49 by mgaspar-         ###   ########.fr       */
+/*   Created: 2023/09/08 17:03:27 by mgaspar-          #+#    #+#             */
+/*   Updated: 2023/09/08 17:05:10 by mgaspar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libft.h"
+#include "minitalk.h"
+
+void	ft_putnbr(int n)
+{
+	char	c;
+
+	if (n == -2147483648)
+	{
+		write(1, "-2147483648", 11);
+		return ;
+	}
+	if (n < 0)
+	{
+		write(1, "-", 1);
+		n = -n;
+	}
+	if (n < 10)
+	{
+		c = n + '0';
+		write(1, &c, 1);
+		return ;
+	}
+	else if (n >= 10 && n <= 2147483647)
+	{
+		ft_putnbr(n / 10);
+		ft_putnbr(n % 10);
+	}
+}
+
+int	ft_power(int base, int power)
+{
+	int	result;
+
+	if (power < 0)
+		return (0);
+	result = 1;
+	while (power)
+	{
+		result *= base;
+		power--;
+	}
+	return (result);
+}
+
+size_t	ft_strlen(const char *s)
+{
+	int	i;
+
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i])
+		i++;
+	return (i);
+}
 
 int	ft_atoi(const char *nptr)
 {
