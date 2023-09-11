@@ -6,84 +6,75 @@
 /*   By: mgaspar- <mgaspar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/13 10:52:48 by mgaspar-          #+#    #+#             */
-/*   Updated: 2023/09/09 20:44:09 by mgaspar-         ###   ########.fr       */
+/*   Updated: 2023/09/11 13:20:58 by mgaspar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void	raise_flag(int signum)
+int	send_bit(int server_pid, char *message)
 {
-	static int	messages = 0;
+	static char		*msg = NULL;
+	static int		s_pid = -1;
+	static char		current_char;
+	static int		bit_counter = 0;
 
-	(void)signum;
-	messages++;
-	ft_putnbr(messages);
-	if (messages == 8)
+	if (!msg)
+		msg = message;
+	if (s_pid == -1)
+		s_pid = server_pid;
+	if (bit_counter == 8)
 	{
-		write(1, "\n", 1);
-		messages = 0;
+		bit_counter = 0;
+		msg++;
 	}
-}
-
-void	send_last_byte(int server_pid)
-{
-	int	i;
-
-	i = 0;
-	while (i < 7)
-	{
-		kill(server_pid, SIGUSR1);
-		pause();
-		i++;
-	}
-	kill(server_pid, SIGUSR1);
-}
-
-/**
- * El problema esta quan la senyal de raise flag del server arriba ENTRE 
- * l'execucio de les linies 36 i 37 o 57/59 i 60
- * osigui entre que li diem al server aqui va un bit i ens posem a esperar
- * la resposta 
- * **/
-
-void	send_next_byte(unsigned char current_char, int server_pid)
-{
-	int	i;
-
-	i = 0;
-	while (i < 8)
+	if (bit_counter == 0)
+		current_char = *msg;
+	if (*msg)
 	{
 		if (current_char % 2 == 0)
-			kill(server_pid, SIGUSR1);
+			kill(s_pid, SIGUSR1);
 		else
-			kill(server_pid, SIGUSR2);
-		pause();
+			kill(s_pid, SIGUSR2);
 		current_char /= 2;
-		i++;
+		bit_counter++;
 	}
+	else
+	{
+		kill(s_pid, SIGUSR1);
+		if (++bit_counter == 8)
+			return (1);
+	}
+	return (0);
 }
 
-void	sender(int server_pid, char *str)
+void	handler(int signum)
 {
-	char	current_char;
+	int	done;
 
-	if (ft_strlen(str) == 0)
-		return ;
-	while (*str)
-	{
-		current_char = (unsigned char)(*str);
-		send_next_byte(current_char, server_pid);
-		str++;
-	}
-	send_last_byte(server_pid);
+	(void)signum;
+	done = send_bit(0, 0);
+	if (done)
+		exit(0);
 }
 
 int	main(int argc, char **argv)
 {
+	struct sigaction	sigaction_struct;
+	sigset_t			block_mask;
+
 	if (argc != 3)
 		return (-1);
-	signal(SIGUSR1, raise_flag);
-	sender(ft_atoi(argv[1]), argv[2]);
+	sigemptyset(&block_mask);
+	sigaddset(&block_mask, SIGINT);
+	sigaddset(&block_mask, SIGQUIT);
+	//sigaddset(&block_mask, SIGUSR1);
+	sigaction_struct.sa_mask = block_mask;
+	sigaction_struct.sa_handler = handler;
+	sigaction(SIGUSR1, &sigaction_struct, NULL);
+	signal(SIGUSR1, handler);
+	send_bit(ft_atoi(argv[1]), argv[2]);
+	while (1)
+		pause();
 	return (0);
 }

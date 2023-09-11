@@ -6,7 +6,7 @@
 /*   By: mgaspar- <mgaspar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 17:03:27 by mgaspar-          #+#    #+#             */
-/*   Updated: 2023/09/08 17:05:10 by mgaspar-         ###   ########.fr       */
+/*   Updated: 2023/09/11 12:14:34 by mgaspar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,4 +93,33 @@ int	ft_atoi(const char *nptr)
 		i++;
 	}
 	return (num * sign);
+}
+
+char	*ft_stradd(char *str, char c)
+{
+	char	*nstr;
+	int		i;
+
+	if (!str)
+	{
+		nstr = (char *)malloc(2 * sizeof(char));
+		if (nstr == NULL)
+			return (NULL);
+		nstr[0] = c;
+		nstr[1] = 0;
+		return (nstr);
+	}
+	nstr = (char *)malloc((ft_strlen(str) + 2) * sizeof(char));
+	if (nstr == NULL)
+		return (NULL);
+	*(nstr + ft_strlen(str) + 1) = 0;
+	i = 0;
+	while (str[i])
+	{
+		nstr[i] = str[i];
+		i++;
+	}
+	nstr[i] = c;
+	free(str);
+	return (nstr);
 }
